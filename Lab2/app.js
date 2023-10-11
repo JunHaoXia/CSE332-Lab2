@@ -20,11 +20,13 @@ d3.csv('youtube_data.csv').then(data => {
         if (!isNaN(selectedData[0])) {
             console.log("If varibles are integers")
             createHistogram(selectedData, selectedVariable);
+            getPieChart(selectedData);
             getScatterPlot(data, selectedVariable);
         } else {
             console.log("If varibles are not integers")
             getBarChart(selectedData, selectedVariable);
             getPieChart(selectedData);
+            getScatterPlot(data, selectedVariable);
         }
     });
     function getBarChart(data, category) {
@@ -243,7 +245,8 @@ d3.csv('youtube_data.csv').then(data => {
         const slice = g.selectAll('.arc')
             .data(pieData)
             .enter().append('g')
-            .attr('class', 'arc');
+            .attr('class', 'arc')
+            .attr('transform', `translate(-150,0)`);
         // Add the pie slices to the chart
         slice.append('path')
             .attr('d', arc)
@@ -255,21 +258,27 @@ d3.csv('youtube_data.csv').then(data => {
             .text(d => d.data.label);
         // Add a legend
         const legend = svg.selectAll('.legend')
-            .data(data.map(d => d.label))
+            .data(data.map(d => d))
             .enter().append('g')
             .attr('class', 'legend')
             .attr('transform', (d, i) => `translate(0,${i * 20})`);
         legend.append('rect')
-            .attr('x', svgWidth - 36)
+            .attr('x', svgWidth - 72)
             .attr('width', 18)
             .attr('height', 18)
             .style('fill', (d, i) => color(i));
         legend.append('text')
-            .attr('x', svgWidth - 36)
+            .attr('x', svgWidth - 72)
             .attr('y', 9)
             .attr('dy', '.35em')
             .style('text-anchor', 'end')
-            .text(d => d);
+            .text(d => d.label);
+        legend.append('text')
+            .attr('x', svgWidth)
+            .attr('y', 9)
+            .attr('dy', '.35em')
+            .style('text-anchor', 'end')
+            .text(d => (Math.round(d.value * 100) / 100).toFixed(2) + "%");
     }
     function getScatterPlot(data, variablex) {
         console.log("variable x chosen:")
@@ -309,15 +318,40 @@ d3.csv('youtube_data.csv').then(data => {
         // Clean data up to prevent nan values from appearing
         XData = selectedXData.filter(value => !isNaN(value));
         YData = selectedYData.filter(value => !isNaN(value));
-        
-        // Scaling the x axis using given x varible name
-        const xScale = d3.scaleLinear()
-            .domain([Math.min(...XData), Math.max(...XData)])
-            .range([margin.left, chartWidth]);
-        // Scaling the y axis using given y varible name
-        const yScale = d3.scaleLinear()
-            .domain([Math.min(...YData), Math.max(...YData)])
-            .range([chartHeight, margin.top]);
+        let xScale;
+        let yScale;
+        if (Number.isInteger(selectedXData[0])){
+            // Scaling the x axis using given x varible name
+            xScale = d3.scaleLinear()
+                .domain([Math.min(...XData), Math.max(...XData)])
+                .range([margin.left, chartWidth]);
+        }
+        else{
+            // Scaling the x axis 
+            xScale = d3.scaleBand()
+                .domain(selectedXData)
+                .range([margin.left, chartWidth])
+        }
+        if (Number.isInteger(selectedYData[0])){
+            // Scaling the x axis using given x varible name
+            yScale = d3.scaleLinear()
+                .domain([Math.min(...YData), Math.max(...YData)])
+                .range([chartHeight, margin.top]);
+        }
+        else{
+            // Scaling the y axis 
+            yScale = d3.scaleBand()
+                .domain(selectedYData)
+                .range([chartHeight, margin.top])
+        }
+        // // Scaling the x axis using given x varible name
+        // const xScale = d3.scaleLinear()
+        //     .domain([Math.min(...XData), Math.max(...XData)])
+        //     .range([margin.left, chartWidth]);
+        // // Scaling the y axis using given y varible name
+        // const yScale = d3.scaleLinear()
+        //     .domain([Math.min(...YData), Math.max(...YData)])
+        //     .range([chartHeight, margin.top]);
     
         const xAxis = d3.axisBottom(xScale);
         const yAxis = d3.axisLeft(yScale);
