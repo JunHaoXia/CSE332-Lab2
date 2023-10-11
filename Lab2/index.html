@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization of Youtube Data</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Visualization of Youtube Data</h1>
+    <h3 style="color: red;">(the Top 955 channels at least)</h3>
+    <div id="dropdown-container">
+        <label for="variable-dropdown">Select a variable:</label>
+        <select id="variable-dropdown"></select>
+    </div>
+    <div id="scatterplot-dropdown-container">
+        <label for="scatterplot-dropdown">Select a second variable(Scatter Plot Only!):</label>
+        <select id="scatterplot-dropdown"></select>
+    </div>
+    <div id="histogram-container"></div>
+    <div id="barchart-container"></div>
+    <div id="piechart-container"></div>
+    <div id="scatterplot-container"></div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

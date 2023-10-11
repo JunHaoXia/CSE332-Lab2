@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#dropdown-container {
+    margin-bottom: 10px;
+}
+
+#histpgram-container {
+    display: flex;
+    justify-content: center;
+}
+
+#barchart-container {
+    display: flex;
+    justify-content: center;
+}
+
+#piechart-container {
+    display: flex;
+    justify-content: center;
+}
+
+#scatterplot-container {
+    display: flex;
+    justify-content: center;
+}
+
+svg {
+    border: 1px solid #ccc;
+}
