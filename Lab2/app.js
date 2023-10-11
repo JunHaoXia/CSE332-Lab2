@@ -9,7 +9,7 @@ d3.csv('youtube_data.csv').then(data => {
 
     dropdown.on('change', function() {
         const selectedVariable = this.value;
-        const selectedData = data.map(d => d[selectedVariable]);
+        const selectedData = (data.map(d => d[selectedVariable])).sort((a, b) => a - b);
         // Clear all charts on change
         d3.select('#histogram-container').selectAll('*').remove();
         d3.select('#barchart-container').selectAll('*').remove();
@@ -20,12 +20,12 @@ d3.csv('youtube_data.csv').then(data => {
         if (!isNaN(selectedData[0])) {
             console.log("If varibles are integers")
             createHistogram(selectedData, selectedVariable);
-            getPieChart(selectedData);
+            getPieChart(selectedData, selectedVariable);
             getScatterPlot(data, selectedVariable);
         } else {
             console.log("If varibles are not integers")
             getBarChart(selectedData, selectedVariable);
-            getPieChart(selectedData);
+            getPieChart(selectedData, selectedVariable);
             getScatterPlot(data, selectedVariable);
         }
     });
@@ -88,6 +88,13 @@ d3.csv('youtube_data.csv').then(data => {
             .attr("x", margin.top - chartHeight/2)
             .attr("y", 20)
             .text("Amount");
+        // Add chart title
+        svg.append('text')
+            .attr('class', 'chart-title')
+            .attr('text-anchor', 'middle')
+            .attr('x', chartWidth / 2 + margin.left)
+            .attr('y', margin.top / 2)
+            .text(category + ' Bar Chart');
         // The columns
         svg.selectAll('rect')
             .data(data)
@@ -169,6 +176,13 @@ d3.csv('youtube_data.csv').then(data => {
             .attr("x", margin.top - chartHeight/2)
             .attr("y", 20)
             .text("Amount");
+        // Add chart title
+        svg.append('text')
+            .attr('class', 'chart-title')
+            .attr('text-anchor', 'middle')
+            .attr('x', chartWidth / 2 + margin.left)
+            .attr('y', margin.top / 2)
+            .text(category + ' Histogram');
         // Creating the bars
         svg.selectAll('rect')
             .data(bins)
@@ -180,7 +194,7 @@ d3.csv('youtube_data.csv').then(data => {
             .style('fill', 'steelblue');
     }
 
-    function getPieChart(data) {
+    function getPieChart(data, variable) {
         console.log("Inside getPieChart function")
         console.log(data)
         const total = data.length;
@@ -199,10 +213,10 @@ d3.csv('youtube_data.csv').then(data => {
         console.log(categoryPercentages)
         // 'categoryPercentages' now contains the percentages for each category
         const pieData = Object.entries(categoryPercentages).map(([label, value]) => ({ label, value }));
-        createPieChart(pieData);
+        createPieChart(pieData, variable);
     }
 
-    function createPieChart(data) {
+    function createPieChart(data, variable) {
         // Sort the data by value in descending order
         data.sort((a, b) => b.value - a.value);
 
@@ -256,6 +270,13 @@ d3.csv('youtube_data.csv').then(data => {
             .attr('transform', d => `translate(${arc.centroid(d)})`)
             .attr('dy', '0.35em')
             .text(d => d.data.label);
+        // Add chart title
+        svg.append('text')
+            .attr('class', 'chart-title')
+            .attr('text-anchor', 'middle')
+            .attr('x', svgWidth / 2)
+            .attr('y', 15)
+            .text(variable + ' Pie Chart');
         // Add a legend
         const legend = svg.selectAll('.legend')
             .data(data.map(d => d))
@@ -304,7 +325,7 @@ d3.csv('youtube_data.csv').then(data => {
         // Define the borders for the scatter plot
         const svgWidth = 1800;
         const svgHeight = 900;
-        const margin = { top: 30, right: 30, bottom: 30, left: 100 };
+        const margin = { top: 30, right: 30, bottom: 30, left: 220 };
         const chartWidth = svgWidth - margin.left - margin.right;
         const chartHeight = svgHeight - margin.top - margin.bottom;
         // Select the proper container and save it as a variable
@@ -378,6 +399,13 @@ d3.csv('youtube_data.csv').then(data => {
             .attr("x", margin.top - chartHeight/2)
             .attr("y", 20)
             .text(yvalue);
+        // Add chart title
+        svg.append('text')
+            .attr('class', 'chart-title')
+            .attr('text-anchor', 'middle')
+            .attr('x', chartWidth / 2 + margin.left)
+            .attr('y', margin.top / 2)
+            .text(xvalue + ' vs. ' + yvalue);
         // Creating the plots
         svg.selectAll('circle')
             .data(data)
