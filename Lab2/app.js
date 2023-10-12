@@ -345,25 +345,29 @@ d3.csv('youtube_data.csv').then(data => {
             // Scaling the x axis using given x varible name
             xScale = d3.scaleLinear()
                 .domain([Math.min(...XData), Math.max(...XData)])
-                .range([margin.left, chartWidth]);
+                .range([margin.left, chartWidth])
+                .padding(1);
         }
         else{
             // Scaling the x axis 
             xScale = d3.scaleBand()
                 .domain(selectedXData)
                 .range([margin.left, chartWidth])
+                .padding(1);
         }
         if (Number.isInteger(selectedYData[0])){
             // Scaling the x axis using given x varible name
             yScale = d3.scaleLinear()
                 .domain([Math.min(...YData), Math.max(...YData)])
-                .range([chartHeight, margin.top]);
+                .range([chartHeight, margin.top])
+                .padding(1);
         }
         else{
             // Scaling the y axis 
             yScale = d3.scaleBand()
                 .domain(selectedYData)
                 .range([chartHeight, margin.top])
+                .padding(1);
         }
         // // Scaling the x axis using given x varible name
         // const xScale = d3.scaleLinear()
